@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+      <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color:#05a081">
+            <div class="container-fluid my-container-fluid">
+                <a class="navbar-brand fw-bold d-lg-none" href="index.html">Happy Search!</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <a class="navbar-brand fw-bold d-none d-lg-block" href="index.html">Happy Search!</a>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">FAQ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link">License</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+</div>
+<div class="hero-container" id="hero-sec">
+    <div class="container-fluid">
+           
+
+        <div class="row d-flex pageimagecontainer">
+
+
+        </div>
+    
+
+</div>
+</div>
+<div class="container-fluid">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <p class="col-md-4 mb-0 text-body-secondary">&copy; <span id="year"></span> Happy Search, Inc</p>
+  
+      <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+      </a>
+  
+      <ul class="nav col-md-4 justify-content-end">
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+        <li class="nav-item"><a href="about.html" class="nav-link px-2 text-body-secondary">About</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQ</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">License</a></li>
+      </ul>
+    </footer>
+  </div>
+  <script>
+    document.getElementById("year").innerHTML =  new Date().getFullYear()
+  </script>
+<script>
+    
+let urlParameter = new URLSearchParams(window.location.search)
+let imgUrlDetails = urlParameter.get('id')
+let photoId = `page.html?id=` + imgUrlDetails
+let pageImgCont = document.querySelector('.pageimagecontainer')
+let videoResult = document.querySelector('.videoresults')
+
+async function pageImg(){
+    let pagePhotoUrl = await fetch(`https://pixabay.com/api/?key=37860007-782d282111110936664077067&id=${imgUrlDetails}`)
+    let pageRaw = await pagePhotoUrl.json()
+    let pageRes = pageRaw.hits
+    console.log(pageRes)
+
+    for(let i = 0; i < pageRes.length; i++){
+        let pageItem = pageRes[i]
+        let pagePhotoId = pageItem.id
+        let pageImg = pageItem.webformatURL
+        let pagePhotoName = pageItem.tags
+        let photoView =  pageItem.views
+        let photodwnlnmb = pageItem.downloads
+        let photoLike = pageItem.likes
+        let photoCmnt = pageItem.comments
+        let phtSmDwn = pageItem.previewURL
+        let phtLgDwn = pageItem.largeImageURL
+        document.title = pagePhotoName + ' | Photo'
+pageImgCont.innerHTML = `<div class="col-lg-6 align-middle">
+<div class="px-2 py-2">
+    <img src="${pageImg}" alt="${pagePhotoName}"/>
+    </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="px-5 py-5 mt-5">
+        <div class="px-2 py-2 align-middle det-desc">
+    <h4>${pagePhotoName}</h4>
+    <hr>
+    <p><b>Views</b>  ${photoView}</p>
+    <p><b>Downloads</b> ${photodwnlnmb}</p>
+    <p><b>Likes</b> ${photoLike}</p>
+    <p><b>Comments</b>  ${photoCmnt}</p>
+    <div class="px-2 py-2">
+          <button type="button" class="btn btn-outline-primary btn-lg dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Download</button>
+          <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="${phtSmDwn}" target="_blank">Small</a></li>
+    <li><a class="dropdown-item" href="${pageImg}" target="_blank">Medium</a></li>
+    <li><a class="dropdown-item" href="${phtLgDwn}" target="_blank">Large </a></li>
+    </ul>
+        </div>
+    </div>
+    </div>
+    </div>`
+    }
+}
+
+
+
+async function videoDetRes(){
+    let videoPageUrl = await fetch(`https://pixabay.com/api/videos/?key=37860007-782d282111110936664077067&id=${imgUrlDetails}`)
+  let vRawResult = await videoPageUrl.json()
+  let finalVideoRes = vRawResult.hits
+  for(let i = 0; i < finalVideoRes.length; i++) {
+    let videoResItem = finalVideoRes[i]
+    let videoResId = videoResItem.id
+    let videoNameRes = videoResItem.tags
+    let videoResPrev = videoResItem.videos.medium.url
+    let vdViews = videoResItem.views
+    let vdDwnld = videoResItem.downloads
+    let vdLikes = videoResItem.likes
+    let vdCmnts = videoResItem.comments
+    let vdLarge = videoResItem.videos.large.url
+    let vdSmall = videoResItem.videos.small.url 
+    let vdTiny = videoResItem.videos.tiny.url 
+    let vdMd = videoResItem.videos.medium.url
+    document.title = videoNameRes + ' | Video'
+    pageImgCont.style.display = `none`
+
+    videoResult.innerHTML = `<div class="col align-middle">
+<div class="px-2 py-2">
+    <video width="620" height="540" controls>
+    <source src="${videoResPrev}" type="video/mp4">
+    </video>
+    </div>
+    </div>
+    <div class="col">
+      <div class="px-5 py-5 mt-5">
+        <div class="px-2 py-2 align-middle">
+    <h4>${videoNameRes}</h4>
+    <p><b>Views</b>  ${vdViews}</p>
+    <p><b>Downloads</b> ${vdDwnld}</p>
+    <p><b>Likes</b> ${vdLikes}</p>
+    <p><b>Comments</b>  ${vdCmnts}</p>
+    <div class="px-2 py-2">
+          <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Download</button>
+          <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="${vdSmall}" target="_blank">Small</a></li>
+    <li><a class="dropdown-item" href="${videoResPrev}" target="_blank">Medium</a></li>
+    <li><a class="dropdown-item" href="${vdLarge}" target="_blank">Large </a></li>
+    </ul>
+    </div>
+    </div>
+    </div>`  
+  }
+
+}
+videoDetRes()
+pageImg()
+</script>
+
+</body>
+</html>
