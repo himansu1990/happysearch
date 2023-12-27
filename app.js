@@ -41,7 +41,7 @@ async function videoSearch() {
     newVideoHtml += `<div class="col-lg-3">
     <div class="img-box">
       <a href="videos.html?id=${vId}">
-        <video width="327" height="240" controls>
+        <video width="327" height="240" controls preload="none">
           <source src="${vRes}" type="video/mp4">
         </video>
          
